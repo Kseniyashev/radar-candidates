@@ -104,6 +104,14 @@
   footer h4{margin:0 0 10px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
   footer ul{margin:0;padding-left:18px;color:var(--ink2);font-size:13.5px}
   footer li{margin:5px 0} footer b{color:var(--ink)}
+  .viewnote{color:var(--ink2);font-size:13.5px;margin:12px 0 4px;max-width:900px}
+  .viewnote code{font-family:var(--mono);font-size:12px;background:var(--panel2);border:1px solid var(--line2);border-radius:4px;padding:0 5px}
+  .memechip{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.04em;color:#fff;background:var(--accent);border-radius:5px;padding:1px 7px;margin-left:7px;vertical-align:middle}
+  .statuschip{display:inline-block;font-size:11px;font-weight:700;border-radius:5px;padding:1px 8px;margin-left:8px;vertical-align:middle;color:var(--fresh);background:var(--fresh-bg)}
+  .statuschip.weak{color:var(--ink2);background:var(--panel2)}
+  .paneltags{font-family:var(--mono);font-size:11px;color:var(--muted)}
+  #au-body .bt i{background:var(--ig)}
+  #au-body .fn{max-width:260px}
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -111,9 +119,13 @@
   <header>
     <div class="eyebrow">Радар · трендвотчинг · пилот-прогон</div>
     <h1>Кандидаты в тренды</h1>
-    <p class="sub">Аутлаеры психо-ниши по темам и подтемам. Отдельно Instagram Reels (RU-ядро + смежные, 262 акк) и TikTok (Virlo, 505 роликов). Срез от <span class="num">09.07.2026</span> — это <b>кандидаты</b>, не подтверждённые тренды. Прошли фильтр качества: <b>≥5000 просмотров</b> и композит reach+engagement ≥ медианы (микро-шум отсеян). Ссылки ▶ ведут на конкретные ролики.</p>
+    <p class="sub">Аутлаеры психо-ниши по темам и подтемам. Отдельно Instagram Reels (RU-ядро + смежные, 262 акк) и TikTok (Virlo, 505 роликов). Срезы от <span class="num">09–10.07.2026</span> — это <b>кандидаты</b>, не подтверждённые тренды. Прошли фильтр качества: <b>≥5000 просмотров</b> и композит reach+engagement ≥ медианы (микро-шум отсеян). Ссылки ▶ ведут на конкретные ролики.</p>
     <div class="controls">
-      <div class="toggle" role="tablist" aria-label="Фильтр по свежести">
+      <div class="toggle" role="tablist" aria-label="Вид">
+        <button id="tab-themes" class="on" role="tab" aria-selected="true">Темы</button>
+        <button id="tab-formats" role="tab" aria-selected="false">Форматы</button>
+      </div>
+      <div class="toggle" id="fresh-toggle" role="tablist" aria-label="Фильтр по свежести">
         <button id="btn-all" class="on" role="tab" aria-selected="true">Все аутлаеры</button>
         <button id="btn-fresh" role="tab" aria-selected="false">Только свежие · ≤14 дней</button>
       </div>
@@ -122,6 +134,7 @@
     <p class="modenote" id="modenote"></p>
   </header>
 
+  <div id="view-themes">
   <section class="platform">
     <div class="pbar ig"><h2>Instagram Reels</h2><span class="meta" id="ig-meta"></span></div>
     <div id="ig-body"></div>
@@ -140,6 +153,27 @@
       <div class="fcol tt"><h3><span class="dot"></span>TikTok</h3><div id="tt-fmt"></div></div>
     </div>
   </section>
+  </div><!-- /view-themes -->
+
+  <div id="view-formats" hidden>
+    <section class="platform">
+      <div class="pbar ig"><h2>Кросс-нишевые мем-форматы</h2><span class="meta">подтверждены чтением роликов · срезы 06–10.07</span></div>
+      <p class="viewnote">Сигнатура мема обратна теме: <b>один формат — разные темы и разные ниши</b>. Найдены прогоном формат-ДНК по 1120 аутлаерам (RU-психология + смежные + EN + TikTok). Детекция по подписям ловит только маркированные механики — это нижняя оценка, полнота вырастет с транскриптами.</p>
+      <div id="fmt-fam"></div>
+    </section>
+
+    <section class="platform">
+      <div class="pbar tt"><h2>Панель G — что залетает поперёк ниш</h2><span class="meta" id="g-meta"></span></div>
+      <p class="viewnote">Первый срез кросс-нишевого формат-радара (10.07): <b>69 аккаунтов / 13 ниш / 1367 роликов</b>. Показаны свежие (≤14 дн) аутлаеры: ≥3× медианы своего аккаунта и ≥5000 просмотров. Это статика одного среза — velocity форматов появится со 2-го снапшота ~17.07.</p>
+      <div id="g-body"></div>
+    </section>
+
+    <section class="platform">
+      <div class="pbar ig"><h2>Аудио-мемы панели G</h2><span class="meta">кросс-нишевые аудио · 10.07</span></div>
+      <p class="viewnote">Аудио, живущие в ≥2 нишах одновременно. В экспертных панелях аудио-мемы не работают (ролики на общих аудио залетают даже реже одиночных — 11.9% vs 14.1%), поэтому ловим их только здесь. Instagram сам метит трендовые аудио флагом <code>is_trending_in_clips</code> — таких в срезе 64. «Феникс» — сквозной: 3 ниши панели G + единственное живое аудио у психологов.</p>
+      <div id="au-body"></div>
+    </section>
+  </div>
 
   <footer>
     <h4>Как это читать честно</h4>
@@ -251,4 +285,83 @@ function setMode(fresh){
 document.getElementById('btn-all').onclick=()=>setMode(false);
 document.getElementById('btn-fresh').onclick=()=>setMode(true);
 render();
+
+const FMT_DATA = {"meta": {"date": "2026-07-10", "g_acc": 69, "g_niches": 13, "g_reels": 1367, "g_fresh": 55, "trending_flag": 64}, "formats": [{"title": "POV-скетч «Когда...»", "note": "Разыгранная от первого лица бытовая ситуация. Живёт в 4 панелях (RU-психология, смежные, EN, TikTok) — настоящий платформенный формат.", "status": "подтверждён", "n": 7, "acc": 7, "panels": {"A": 2, "C": 1, "D": 1, "TT": 3}, "ex": [{"u": "vsezovut.burik", "panel": "A", "ratio": 851.3, "cap": "Когда попросила денег у мужа \n\n#абьюзивныеотношения #отношения #жизненно #юмор #финансы #женскиеделишки #мужиж", "url": "https://www.instagram.com/reel/DIk_Gzjoobm/"}, {"u": "starringnkanyezi", "panel": "TT", "ratio": 118.9, "cap": "like girl gtfo fr 🤚🏽 #fypage #tiktoksa #relatablecontent #toxicmom #narcissisticrelationship", "url": null}, {"u": "anna_zhylenko_psy", "panel": "A", "ratio": 36.5, "cap": "Don’t forget your headphones 😂\n\n#friendship #lifestyle #jokes #vlog #cyprus", "url": "https://www.instagram.com/reel/DaXXchdNKpg/"}]}, {"title": "Проективный выбор («что выпало тебе»)", "note": "Зритель выбирает карту/звезду/знак — ответ в ролике или комментах. Мигрирует из эзотерики в психологию (сигнал @sila_.slov 2.98M ещё в пилоте 06.07).", "status": "подтверждён", "n": 5, "acc": 4, "panels": {"A": 1, "C": 4}, "ex": [{"u": "psy.liliya.emdr.25", "panel": "A", "ratio": 34.2, "cap": "А что выпало тебе❓️", "url": "https://www.instagram.com/reel/DR_2oC0DM_X/"}, {"u": "pro.putiliny", "panel": "C", "ratio": 6.3, "cap": "Если вы выбрали красную звезду. Не время сдаваться. Главное – верить и до последнего проявлять свою силу духа.", "url": "https://www.instagram.com/reel/Dady_lFBRsa/"}, {"u": "anna.pro_rod", "panel": "C", "ratio": 4.8, "cap": "Чёрная кошка- к неприятностей\nПросыпали соль- к сорре\n\n⛔️\n\nВыбирай правильные знаки", "url": "https://www.instagram.com/reel/DI-hvP8IMiV/"}]}, {"title": "Опрос-дилемма", "note": "Провокационный выбор из двух зол («что хуже: X или Y?»). Серийно залетает в TikTok (×127–141), виден и в IG-ядре.", "status": "подтверждён", "n": 3, "acc": 2, "panels": {"A": 1, "TT": 2}, "ex": [{"u": "thinking.soull", "panel": "TT", "ratio": 141.2, "cap": "Самый сильный страх влюблённого мужчины: не потерять тебя или быть обманутым?  #привязанность #ментальноездоро", "url": null}, {"u": "thinking.soull", "panel": "TT", "ratio": 127.6, "cap": "что хуже: эмоциональная открытость или холодная «идеальность»? #рекомендации #психологияотношений #отношениясд", "url": null}, {"u": "psyholog.gulzar", "panel": "A", "ratio": 100.3, "cap": "«Обязана ли невестка жить с родителями мужа? Как свекрови отнесутся к невестке другой национальности?»\n\nМы реш", "url": "https://www.instagram.com/reel/C-FJUpTIXj1/"}]}, {"title": "Явные тренд-адаптации", "note": "Подпись прямо маркирует участие в тренде/челлендже. Слабый по объёму, но честный маркер — дешёвый детектор для боевого кода.", "status": "слабый сигнал", "n": 2, "acc": 2, "panels": {"A": 1, "C": 1}, "ex": [{"u": "d.shugyla", "panel": "C", "ratio": 17.3, "cap": "Трендтен қалмайық бізде🥹✨❤️", "url": "https://www.instagram.com/reel/Daasc7iIJo1/"}, {"u": "lipanovadiana", "panel": "A", "ratio": 7.3, "cap": "Дочаатренде#новыйгод#снегурочка#", "url": "https://www.instagram.com/reel/DSCxLDaDVl1/"}]}], "g_out": [{"u": "dr.zulya_kaysinovna", "niche": "красота", "ratio": 68.1, "views": 236438, "fmt": "Проблема-решение, объяснение продукта", "meme": false, "cap": "Забудьте о мокрых пятнах на одежде 🤌🏼\n\nВременное устранение гипергидроза ботулотоксином - это ваша у", "url": "https://www.instagram.com/reel/DaUioXGKK12/"}, {"u": "maklein.kz", "niche": "образование", "ratio": 27.2, "views": 97929, "fmt": "не классиф.", "meme": false, "cap": "", "url": "https://www.instagram.com/reel/DaDmbfXtoaA/"}, {"u": "saida_ashurbekova_", "niche": "лайфстайл", "ratio": 23.7, "views": 98044, "fmt": "Семейная зарисовка, отношения", "meme": false, "cap": "#мужжена❤️ \n\n@saida_ashurbekova_ 🌹", "url": "https://www.instagram.com/reel/DaUnFCTuQsJ/"}, {"u": "piskoon", "niche": "юмор", "ratio": 21.3, "views": 294066, "fmt": "Эмоциональное высказывание, личное мнение", "meme": false, "cap": "Как же круто быть отцом 🫂", "url": "https://www.instagram.com/reel/DaS_xr4o_Ka/"}, {"u": "proshtova_", "niche": "мемы", "ratio": 20.7, "views": 2138249, "fmt": "Реакция на увиденное, восторг", "meme": false, "cap": "И это мы увидели 😍🙏🏻", "url": "https://www.instagram.com/reel/DaLi1PfzxBW/"}, {"u": "xeniapavlovaaa", "niche": "лайфстайл", "ratio": 20.6, "views": 384645, "fmt": "Личная история, самоирония", "meme": false, "cap": "ну я\n\n#эмиграция #сербия #европа #релокация #жилетнавписке", "url": "https://www.instagram.com/reel/DaQeRCGgiBe/"}, {"u": "eburakevich", "niche": "юмор", "ratio": 20.0, "views": 515579, "fmt": "Призыв к интерактиву, вопрос", "meme": false, "cap": "Признавайтесь!", "url": "https://www.instagram.com/reel/DaIlRr-NNqb/"}, {"u": "borzaaya", "niche": "бизнес", "ratio": 18.3, "views": 297434, "fmt": "Кейс, бизнес-советы, прогресс", "meme": false, "cap": "@borzaaya продолжаю рассказывать о том, как мы идем к 6 млн выручки в салоне💗 делюсь классным инстру", "url": "https://www.instagram.com/reel/DaP8E7FIGk_/"}, {"u": "g.faizullinaa", "niche": "мода", "ratio": 17.9, "views": 419443, "fmt": "Экспертный разбор, советы по стилю", "meme": false, "cap": "Секреты драматик-классика\n\nПочему этот типаж выглядит дорого?\nТа самая блуза от @perfeqtue \n\n✔️ Идеа", "url": "https://www.instagram.com/reel/DaFplt6MFJJ/"}, {"u": "eburakevich", "niche": "юмор", "ratio": 15.9, "views": 410773, "fmt": "Конкурс, инструкция по участию", "meme": false, "cap": "Смотреть нельзя участвовать. Тут только одна верная запятая 😉\n\nКак получить шанс выиграть фан-зону м", "url": "https://www.instagram.com/reel/DaDZ-egDzK9/"}, {"u": "vkgym_1", "niche": "мамы", "ratio": 15.4, "views": 1632875, "fmt": "Личное размышление, социальная проблема", "meme": false, "cap": "Я не знаю как люди, которые должны были оказывать медицинскую помощь ребенку, сейчас живут обычной ж", "url": "https://www.instagram.com/reel/DaNmupnt6v-/"}, {"u": "nady_bobrysheva", "niche": "юмор", "ratio": 15.2, "views": 290704, "fmt": "Исповедь, личная боль", "meme": false, "cap": "Всё! Мне 30 лет! Я устала жить с этим грузом! \nТаких детей, как я, в стране сотни тысяч! \nЯ всю жизн", "url": "https://www.instagram.com/reel/DaHtIzDMxnw/"}, {"u": "saida_ashurbekova_", "niche": "лайфстайл", "ratio": 15.2, "views": 63050, "fmt": "Призыв к диалогу, вопрос", "meme": false, "cap": "Вы со мной?\n\n@saida_ashurbekova_ 🌹\n\n#стиркаковра", "url": "https://www.instagram.com/reel/DaiQJDNtbtN/"}, {"u": "momentswithbolly", "niche": "мемы", "ratio": 13.5, "views": 506140, "fmt": "Обзор фильма, описание сюжета", "meme": false, "cap": "دابانغ فيلم أكشن وإثارة هندي صدر عام 2010، وتدور أحداثه حول ضابط الشرطة الشجاع والمشاكس تشولبول باند", "url": "https://www.instagram.com/reel/DaEA4WDorrW/"}, {"u": "momentswithbolly", "niche": "мемы", "ratio": 12.2, "views": 457030, "fmt": "Обзор фильма, описание сюжета", "meme": false, "cap": "Movie :Stree 2 \n.\n.\nتدور أحداث الفيلم بعد الجزء الأول، حيث تعيش بلدة تشانديري فترة من الهدوء، قبل أن", "url": "https://www.instagram.com/reel/DaLyaYNIWl-/"}, {"u": "azimdjanova.d", "niche": "красота", "ratio": 11.9, "views": 264705, "fmt": "не классиф.", "meme": false, "cap": "", "url": "https://www.instagram.com/reel/DaKz9bzh3UQ/"}, {"u": "piskoon", "niche": "юмор", "ratio": 9.6, "views": 133005, "fmt": "Мотивация, призыв к действию", "meme": false, "cap": "Любите своих детей", "url": "https://www.instagram.com/reel/DaUgb0wothh/"}, {"u": "arnasso", "niche": "юмор", "ratio": 9.2, "views": 715583, "fmt": "не классиф.", "meme": false, "cap": "", "url": "https://www.instagram.com/reel/DaSxhjksoc8/"}, {"u": "kvartiry.aktobe0404", "niche": "дом", "ratio": 8.7, "views": 37369, "fmt": "Объявление о продаже, преимущества", "meme": false, "cap": "🏡 ШҰҒЫЛ ҮЙ САТЫЛАДЫ!\n\n💰 – 11,5 млн\n🤝 Саудасы бар!\n\n📍 Мекенжайы: 41-разъезд, Ауезов көшесі, 13А.\n\n✨", "url": "https://www.instagram.com/reel/DaPSgaRt5Kt/"}, {"u": "anastasia_kochetkova", "niche": "красота", "ratio": 7.9, "views": 68224, "fmt": "Призыв к оценке, вопрос", "meme": false, "cap": "Как вам такая подборка?", "url": "https://www.instagram.com/reel/DaIWwLxKAWf/"}, {"u": "antuankutuzoff", "niche": "юмор", "ratio": 7.4, "views": 3093501, "fmt": "Ироничное наблюдение, зарисовка", "meme": false, "cap": "Лишь пение птиц, шум деревьев и недовольство ребенка - идиллия! \n\n#смешноевидео #подростки #жизнь #д", "url": "https://www.instagram.com/reel/DaNsT20NYSH/"}, {"u": "nady_bobrysheva", "niche": "юмор", "ratio": 7.0, "views": 132696, "fmt": "Вопрос-реакция на ситуацию", "meme": false, "cap": "И че с ним делать?", "url": "https://www.instagram.com/reel/DadmIuVo6cZ/"}, {"u": "mamadrama64", "niche": "мамы", "ratio": 6.8, "views": 344162, "fmt": "Личный опыт, совет, юмор", "meme": false, "cap": "Не повторяйте моих ошибок, девочки!😭🤣\nМногие писали, что все лето не водят детей в сад🤦‍♀️ упаси Бог", "url": "https://www.instagram.com/reel/DamhWRwoGMg/"}, {"u": "keldibek_ataibekov", "niche": "фитнес", "ratio": 6.6, "views": 1057710, "fmt": "не классиф.", "meme": false, "cap": "", "url": "https://www.instagram.com/reel/Daf0vxgIekd/"}, {"u": "azimdjanova.d", "niche": "красота", "ratio": 6.6, "views": 145773, "fmt": "Вопрос аудитории о рецепте", "meme": false, "cap": "qizla silani retseptilaga ohshirkanmi)?😍\n\n#косметология #tashkent #blogger #instagram", "url": "https://www.instagram.com/reel/DaSk4tos1sZ/"}, {"u": "arkharova_poet", "niche": "юмор", "ratio": 6.5, "views": 90950, "fmt": "Неформальный диалог экспертов", "meme": false, "cap": "Пока все на каникулах педагоги @vasyalisaofficial и @arkharova_poet осуждают важные вопросики 😎", "url": "https://www.instagram.com/reel/DaFaa3UOffh/"}, {"u": "maklein.kz", "niche": "образование", "ratio": 6.0, "views": 21650, "fmt": "Ссылка на аккаунт", "meme": false, "cap": "@maklein.kz", "url": "https://www.instagram.com/reel/DafdnHYtcdE/"}, {"u": "dr.zulya_kaysinovna", "niche": "красота", "ratio": 5.8, "views": 20303, "fmt": "Обзор продукта, личный опыт", "meme": false, "cap": "Я, как всегда, все пробую на себе🫠\n\nУ меня тут коктейль из collost micro и NCTF136HA\n\n🔻Collost Micro", "url": "https://www.instagram.com/reel/DaQLPFMKx0J/"}, {"u": "bukllyasha", "niche": "фитнес", "ratio": 5.5, "views": 476397, "fmt": "Знакомство с экспертом, история", "meme": false, "cap": "Привет 👋, меня зовут Арина, я сертифицированный фитнес тренер, нутрициолог 💪🏼 \n\nМой главный девиз - ", "url": "https://www.instagram.com/reel/DaDCHWyg73E/"}, {"u": "like_englishh", "niche": "образование", "ratio": 5.4, "views": 33637, "fmt": "Анонс акции, розыгрыша призов", "meme": false, "cap": "🎁 Каждый месяц — новый iPad 11 для одного из наших студентов!\n\nУ Like English стартует новая акция с", "url": "https://www.instagram.com/reel/DadPbV4MbqQ/"}, {"u": "azimdjanova.d", "niche": "красота", "ratio": 5.2, "views": 115255, "fmt": "Вопрос аудитории, интрига", "meme": false, "cap": "qizla mister X kimakan shunaqa qib bildilami😂😂\n\n#косметология #blogger #tashkent #instagram #rek", "url": "https://www.instagram.com/reel/DaS1RbAs_Rf/"}, {"u": "belousov.rf", "niche": "юмор", "ratio": 5.1, "views": 65378, "fmt": "Анонс открытия, акции, адрес", "meme": false, "cap": "05.07 ОТКРЫТИЕ‼️ \nПервый день все по 500₽ \nНа четвертый уже по 100₽😅\nСАРМАНОВСКИЙ 64‼️", "url": "https://www.instagram.com/reel/DaX_CEIs-Vn/"}, {"u": "nady_bobrysheva", "niche": "юмор", "ratio": 5.0, "views": 95058, "fmt": "Эмоциональная личная история, шок", "meme": false, "cap": "Я НАШЛА СЕСТРУ! Просто нет слов! Ее реакция в этом рилс 💔🥹 не передать словами тот шок, в котором я ", "url": "https://www.instagram.com/reel/DaIMDlgI2AF/"}, {"u": "nady_bobrysheva", "niche": "юмор", "ratio": 4.9, "views": 93790, "fmt": "Описание атмосферы, тег", "meme": false, "cap": "Ростовский вайб @nady_bobrysheva", "url": "https://www.instagram.com/reel/DaSKXcnoAcZ/"}, {"u": "proshtova_", "niche": "мемы", "ratio": 4.8, "views": 497230, "fmt": "Призыв о помощи, сбор средств", "meme": false, "cap": "Алене требуется постоянная реабилитация, чтоб научиться ходить 👇🏻\nЛюбую сумму можете послать на номе", "url": "https://www.instagram.com/reel/DaMi-Y0C9V9/"}, {"u": "eburakevich", "niche": "юмор", "ratio": 4.6, "views": 119781, "fmt": "Короткая эмоциональная реакция", "meme": false, "cap": "Абажаю", "url": "https://www.instagram.com/reel/DaM_MIYO78f/"}, {"u": "borzaaya", "niche": "бизнес", "ratio": 4.6, "views": 75064, "fmt": "Рассказ о традиции, юмор", "meme": false, "cap": "@borzaaya вот такая многолетняя традиция)) у нас есть специальный чат, в котором мы собираем 💴 на дн", "url": "https://www.instagram.com/reel/DaiFrfCoRXw/"}, {"u": "maklein.kz", "niche": "образование", "ratio": 4.5, "views": 16213, "fmt": "Ссылка на аккаунт", "meme": false, "cap": "@maklein.kz", "url": "https://www.instagram.com/reel/DaXVpBoN0Uv/"}, {"u": "tanyushka_mushnikova", "niche": "фуд", "ratio": 4.4, "views": 284933, "fmt": "Комментарий о ценах, быт", "meme": false, "cap": "С каждым разом все дороже и дороже 😢. \n#многодетнаясемья #ярмарка #дети #счастье #любовь", "url": "https://www.instagram.com/reel/DaXUQ00t9Xi/"}, {"u": "molochkova_da", "niche": "дом", "ratio": 4.4, "views": 29819, "fmt": "Наблюдение за детьми, юмор", "meme": false, "cap": "Так смешно когда они друг у друга отбирают соски 😂 сладкие пирожочки ♥️", "url": "https://www.instagram.com/reel/DaFd3P8sqrp/"}, {"u": "bukllyasha", "niche": "фитнес", "ratio": 4.3, "views": 374085, "fmt": "Прямое объявление, призыв", "meme": false, "cap": "Запись на марафон открыта ✅", "url": "https://www.instagram.com/reel/DaFSR0vAiWg/"}, {"u": "saida_ashurbekova_", "niche": "лайфстайл", "ratio": 4.2, "views": 17388, "fmt": "Вопрос к аудитории, интерактив", "meme": false, "cap": "Как думаете смогла успокоить?🤣\n\n@saida_ashurbekova_ 🌹\n\n#детитакиедети", "url": "https://www.instagram.com/reel/DaS7Q_stvoY/"}, {"u": "arnasso", "niche": "юмор", "ratio": 4.1, "views": 321552, "fmt": "Предложение услуг, приглашение", "meme": false, "cap": "в октябре полно свободных дат, давайте и с вашими гостями познакомлюсь", "url": "https://www.instagram.com/reel/DaWsePboVK7/"}, {"u": "proshtova_", "niche": "мемы", "ratio": 3.8, "views": 394288, "fmt": "История преодоления, мотивация", "meme": false, "cap": "Это видео прослогоднее, тогда она была ещё на инвалидной коляске ..\nИ мы мечтали, чтоб она начала хо", "url": "https://www.instagram.com/reel/DaOb3kHzS7t/"}, {"u": "ledi5404", "niche": "фуд", "ratio": 3.7, "views": 381921, "fmt": "Рецепт, список ингредиентов", "meme": false, "cap": "КНИГИ ЗДЕСЬ 👉@valerysanych01\nКартофельные шарики\n3 картошка \n1 ст л сл масла \n2 ст л крахмала \nСыр и", "url": "https://www.instagram.com/reel/Dac6yNXiVG0/"}, {"u": "arkharova_poet", "niche": "юмор", "ratio": 3.6, "views": 50115, "fmt": "Опрос мнения, интерактив", "meme": false, "cap": "Согласны с моей оценкой?) \nКого обсудим в следующий раз?)\n\n#дисней #мультики #отношения #мнение #юмо", "url": "https://www.instagram.com/reel/DaMvoIeIi1x/"}, {"u": "arnasso", "niche": "юмор", "ratio": 3.5, "views": 269085, "fmt": "не классиф.", "meme": false, "cap": "", "url": "https://www.instagram.com/reel/DaH7XCRsQmC/"}, {"u": "luiza_marusa", "niche": "фуд", "ratio": 3.5, "views": 123165, "fmt": "Вопрос к аудитории, юмор", "meme": false, "cap": "А у Вас какая девочки?\n\n#юмор #воспитатель #детскийсад #дети #лето", "url": "https://www.instagram.com/reel/Dac_F25NRtz/"}, {"u": "xeniapavlovaaa", "niche": "лайфстайл", "ratio": 3.4, "views": 63998, "fmt": "Короткий обзор, впечатление", "meme": false, "cap": "Балканы 🤌🏼😄\n\n#эмиграция #сербия #европа", "url": "https://www.instagram.com/reel/DaLhbNaglTe/"}, {"u": "tatka_sashevna", "niche": "фуд", "ratio": 3.3, "views": 196177, "fmt": "Рецепт с советом, ингредиенты", "meme": false, "cap": "Эти рубленные печеночные котлетки получаются очень вкусными и нежными,обязательно попробуйте.\n\n СОВЕ", "url": "https://www.instagram.com/reel/DaGA_FWsXut/"}, {"u": "momentswithbolly", "niche": "мемы", "ratio": 3.3, "views": 125053, "fmt": "Репортаж со светского события", "meme": false, "cap": "النجوم في حفل استقبال انشولا كابور ابنة المنتج بوني كابور ليلة أمس 🔥🔥\n\nAnshula Kapoor Wedding recept", "url": "https://www.instagram.com/reel/DaiFl6VN1ij/"}, {"u": "tatka_sashevna", "niche": "фуд", "ratio": 3.2, "views": 188484, "fmt": "Рецепт с описанием, ингредиенты", "meme": false, "cap": "Как только начинается огуречный сезон,каждый день я готовлю малосольные огурчики по этому рецепту. С", "url": "https://www.instagram.com/reel/DaKk9P8ASLh/"}, {"u": "mamadrama64", "niche": "мамы", "ratio": 3.2, "views": 161877, "fmt": "Юмористический скетч, дисклеймер", "meme": false, "cap": "*данный персонаж придуманный\n\nНикого обидеть не хотела, тем более свою родную и любимую маму🤣\n\nОсн", "url": "https://www.instagram.com/reel/DaDoScAoHJ0/"}, {"u": "keldibek_ataibekov", "niche": "фитнес", "ratio": 3.2, "views": 513218, "fmt": "не классиф.", "meme": false, "cap": "", "url": "https://www.instagram.com/reel/DaCiBqhoAe0/"}, {"u": "kvartiry.aktobe0404", "niche": "дом", "ratio": 3.1, "views": 13492, "fmt": "Презентация объекта недвижимости", "meme": false, "cap": "✨ Просторная квартира — это не только квадратные метры. Это комфорт, уют и место, где приятно собира", "url": "https://www.instagram.com/reel/DaclxiqsPtt/"}], "audio": [{"title": "Феникс", "niches": ["бизнес", "мода", "путешествия"], "acc": 3}, {"title": "КАЙФУН (feat. нига204vip, Nash Slone, lil jordan, банан, BALBESINAGA, Водитель Пылесоса, MR. HOTKEY, @раzгон, BRUCE LEAN, @слизень3000 & lil kakashke)", "niches": ["дом", "красота", "мода"], "acc": 3}, {"title": "GAZ", "niches": ["красота", "лайфстайл"], "acc": 2}, {"title": "Don't Stop 'Til You Get Enough", "niches": ["дом", "фуд"], "acc": 2}, {"title": "ЭКСПОНАТ", "niches": ["фитнес", "фуд"], "acc": 2}, {"title": "Liberian Girl", "niches": ["дом", "фуд"], "acc": 2}, {"title": "Posmotri kakoe leto", "niches": ["мамы", "мода"], "acc": 2}, {"title": "Еврейский портной", "niches": ["мамы", "фитнес"], "acc": 2}, {"title": "Silver Night", "niches": ["бизнес", "мода"], "acc": 2}, {"title": "Намёк на нас", "niches": ["бизнес", "красота"], "acc": 2}, {"title": "stay here don't go", "niches": ["красота", "фитнес"], "acc": 2}, {"title": "У Бога на тебя особый вкус", "niches": ["мемы", "фитнес"], "acc": 2}]};
+const PANEL_NAMES={A:'психология RU',C:'смежные RU',D:'EN',TT:'TikTok'};
+function renderFormatsView(){
+  // блок 1: семейства
+  const ff=document.getElementById('fmt-fam'); ff.innerHTML='';
+  FMT_DATA.formats.forEach(f=>{
+    const th=el('div','theme');
+    const head=el('div','thead');
+    head.appendChild(el('h3',null,esc(f.title)+`<span class="statuschip${f.status==='подтверждён'?'':' weak'}">${esc(f.status)}</span>`));
+    head.appendChild(el('span','tot num',`${f.n} роликов · ${f.acc} акк`));
+    head.appendChild(el('span','paneltags','панели: '+Object.entries(f.panels).map(([p,n])=>`${PANEL_NAMES[p]||p} ×${n}`).join(' · ')));
+    th.appendChild(head);
+    const r=el('div','row');
+    const left=el('div','left');
+    left.appendChild(el('div','name',esc(f.note)));
+    const exw=el('div','ex');
+    f.ex.forEach(e=>{
+      const a=el('a','vlink');
+      if(e.url){a.href=e.url;a.target='_blank';a.rel='noopener noreferrer';}
+      a.innerHTML=`<span class="pl">▶</span> [${PANEL_NAMES[e.panel]||e.panel}] @${esc(e.u)} «${esc(e.cap)}…» <span class="vm">×${e.ratio}</span>`;
+      exw.appendChild(a);
+    });
+    left.appendChild(exw); r.appendChild(left); th.appendChild(r); ff.appendChild(th);
+  });
+  // блок 2: панель G по нишам
+  const gb=document.getElementById('g-body'); gb.innerHTML='';
+  document.getElementById('g-meta').textContent=FMT_DATA.g_out.length+' свежих аутлаеров';
+  const byN={}; FMT_DATA.g_out.forEach(o=>(byN[o.niche]=byN[o.niche]||[]).push(o));
+  const niches=Object.entries(byN).sort((a,b)=>b[1].length-a[1].length);
+  const maxN=Math.max(...niches.map(([,v])=>v.length));
+  niches.forEach(([niche,items])=>{
+    const th=el('div','theme');
+    const head=el('div','thead');
+    head.appendChild(el('h3',null,esc(niche)));
+    head.appendChild(el('span','tot num',items.length+' роликов'));
+    const track=el('div','track');const bar=el('i');bar.style.width=Math.round(items.length/maxN*100)+'%';track.appendChild(bar);head.appendChild(track);
+    th.appendChild(head);
+    items.sort((a,b)=>b.ratio-a.ratio).forEach(o=>{
+      const r=el('div','row');
+      const left=el('div','left');
+      left.appendChild(el('div','name','@'+esc(o.u)+(o.meme?'<span class="memechip">МЕМ-ШАБЛОН</span>':'')));
+      const exw=el('div','ex');
+      const a=el('a','vlink');a.href=o.url;a.target='_blank';a.rel='noopener noreferrer';
+      a.innerHTML=`<span class="pl">▶</span> «${esc(o.cap)||'без подписи'}…»`;
+      exw.appendChild(a);left.appendChild(exw);r.appendChild(left);
+      const met=el('div','metrics');
+      met.appendChild(el('div','m',`<b>×${o.ratio}</b><span>медиана</span>`));
+      met.appendChild(el('div','m',`<b>${(o.views/1000).toFixed(0)}K</b><span>просм.</span>`));
+      met.appendChild(el('span','pill',esc(o.fmt)));
+      r.appendChild(met);th.appendChild(r);
+    });
+    gb.appendChild(th);
+  });
+  // блок 3: аудио
+  const ab=document.getElementById('au-body'); ab.innerHTML='';
+  const maxA=Math.max(...FMT_DATA.audio.map(a=>a.niches.length));
+  FMT_DATA.audio.forEach(a=>{
+    const b=el('div','fbar');
+    b.appendChild(el('div','fn',esc(a.title)+` <span class="paneltags">${a.niches.map(esc).join(' · ')}</span>`));
+    const bt=el('div','bt');const i=el('i');i.style.width=Math.max(8,Math.round(a.niches.length/maxA*100))+'%';bt.appendChild(i);b.appendChild(bt);
+    b.appendChild(el('div','fv num',a.niches.length+' ниш'));
+    ab.appendChild(b);
+  });
+}
+function setView(formats){
+  document.getElementById('view-themes').hidden=formats;
+  document.getElementById('view-formats').hidden=!formats;
+  document.getElementById('fresh-toggle').style.display=formats?'none':'';
+  document.getElementById('stats').style.display=formats?'none':'';
+  document.getElementById('modenote').style.display=formats?'none':'';
+  const t=document.getElementById('tab-themes'),f=document.getElementById('tab-formats');
+  t.classList.toggle('on',!formats);t.setAttribute('aria-selected',String(!formats));
+  f.classList.toggle('on',formats);f.setAttribute('aria-selected',String(formats));
+  if(formats)renderFormatsView();
+}
+document.getElementById('tab-themes').onclick=()=>setView(false);
+document.getElementById('tab-formats').onclick=()=>setView(true);
+if(location.hash==='#formats')setView(true);
 </script>
