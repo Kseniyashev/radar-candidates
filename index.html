@@ -113,6 +113,21 @@
   #au-body .bt i{background:var(--ig)}
   #au-body .fn{max-width:260px}
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+  /* --- вкладка Повестка --- */
+  .kchip{display:inline-block;font-size:11px;font-weight:800;border-radius:5px;padding:1px 8px;margin-left:8px;vertical-align:middle}
+  .kchip.hot{color:#fff;background:var(--accent)}
+  .kchip.alpha{color:var(--accent);background:var(--fresh-bg)}
+  .kchip.news{color:var(--ink2);background:var(--panel2);border:1px solid var(--line)}
+  .agrow{padding:12px 14px;display:flex;flex-direction:column;gap:9px}
+  .aline{display:grid;grid-template-columns:118px 1fr;gap:12px;align-items:start;font-size:13.5px;color:var(--ink2)}
+  @media(max-width:600px){.aline{grid-template-columns:1fr;gap:2px}}
+  .alab{font-weight:700;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);padding-top:2px}
+  .aline b{color:var(--ink)}
+  .nichechip{display:inline-block;font-size:11px;font-weight:650;background:var(--ig-bg);color:var(--ig);border-radius:5px;padding:1px 7px;margin:0 4px 5px 0}
+  .areels{display:flex;flex-direction:column;gap:3px;margin-top:6px}
+  .amuted{color:var(--muted)}
+  .agn{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:11px;color:var(--ink2)}
 </style>
 
 <div class="wrap">
@@ -124,6 +139,7 @@
       <div class="toggle" role="tablist" aria-label="Вид">
         <button id="tab-themes" class="on" role="tab" aria-selected="true">Темы</button>
         <button id="tab-formats" role="tab" aria-selected="false">Форматы</button>
+        <button id="tab-agenda" role="tab" aria-selected="false">Повестка</button>
       </div>
       <div class="toggle" id="fresh-toggle" role="tablist" aria-label="Фильтр по свежести">
         <button id="btn-all" class="on" role="tab" aria-selected="true">Все аутлаеры</button>
@@ -172,6 +188,14 @@
       <div class="pbar ig"><h2>Аудио-мемы панели G</h2><span class="meta">кросс-нишевые аудио · 10.07</span></div>
       <p class="viewnote">Аудио, живущие в ≥2 нишах одновременно. В экспертных панелях аудио-мемы не работают (ролики на общих аудио залетают даже реже одиночных — 11.9% vs 14.1%), поэтому ловим их только здесь. Instagram сам метит трендовые аудио флагом <code>is_trending_in_clips</code> — таких в срезе 64. «Феникс» — сквозной: 3 ниши панели G + единственное живое аудио у психологов.</p>
       <div id="au-body"></div>
+    </section>
+  </div>
+
+  <div id="view-agenda" hidden>
+    <section class="platform">
+      <div class="pbar" style="background:var(--accent)"><h2>Повестка недели</h2><span class="meta" id="ag-meta"></span></div>
+      <p class="viewnote">Темы, залетающие по всему рус-IG на внешнем инфоповоде — <b>независимо от ниши</b>. Гибрид: <b>новостной пульс</b> (12 Telegram-каналов через t.me/s — leading) ↔ <b>подтверждение в IG</b> кросс-нишево (панель G — confirmation). Мини-пилот 12.07: сильнейшая повестка окна — <b>бензин</b> — сама всплыла в 3 несвязанных нишах (юмор, мамы, красота). Класс: <b>🔥 горячая</b> — в новостях И в IG · <b>⚡ разгорается</b> — в новостях, IG зарождается · <b>📰 в новостях</b> — IG-волна по подписям ещё не поднялась (реальный сигнал живёт в видео, нужен транскрипт). ⚠️ Гейт чувствительности отсеял <b id="ag-filtered"></b> инфоповодов окна (политика / война).</p>
+      <div id="agenda-body"></div>
     </section>
   </div>
 
@@ -350,18 +374,55 @@ function renderFormatsView(){
     ab.appendChild(b);
   });
 }
-function setView(formats){
-  document.getElementById('view-themes').hidden=formats;
-  document.getElementById('view-formats').hidden=!formats;
-  document.getElementById('fresh-toggle').style.display=formats?'none':'';
-  document.getElementById('stats').style.display=formats?'none':'';
-  document.getElementById('modenote').style.display=formats?'none':'';
-  const t=document.getElementById('tab-themes'),f=document.getElementById('tab-formats');
-  t.classList.toggle('on',!formats);t.setAttribute('aria-selected',String(!formats));
-  f.classList.toggle('on',formats);f.setAttribute('aria-selected',String(formats));
-  if(formats)renderFormatsView();
+const AGENDA_DATA = {"meta": {"date": "2026-07-12", "channels": 12, "posts": 166, "window": "10–11.07.2026", "panel": "G · 13 ниш · 507 свежих captions", "filtered": 15, "filtered_reason": "политика / война — жёсткий блок гейта чувствительности"}, "items": [{"emoji": "⛽", "title": "Топливо · дефицит бензина", "klass": "hot", "klass_label": "🔥 горячая", "news_n": 8, "news_note": "Новак признал дефицит и очереди на АЗС · Росстат: бензин +6,9% за июнь · Путин поручил обеспечить топливом Крым · 2ГИС выкатил карту бензина (наличие/цены/очереди на 29 тыс. АЗС) · задержания за перепродажу топлива", "ig_niches": ["юмор", "мамы", "красота"], "ig_reels": [{"u": "мамы", "views": 42393, "cap": "Семейный отпуск — сложный отпуск 2026… трудности с бензином на пути к Беларуси", "url": "https://www.instagram.com/reel/DaX1T9uNUMU/", "landed": true}, {"u": "юмор/фуд", "views": 11330, "cap": "Но мы не унываем, прорвёмся… #юмор #бензин #кризис #ржака", "url": "https://www.instagram.com/reel/DaaVt4QNJ9Y/", "landed": false}, {"u": "красота", "views": 4009, "cap": "…ах если б она была на бензине, я б хорошо сэкономила", "url": "https://www.instagram.com/reel/DaMuBa6qcBk/", "landed": false}], "angle": "Универсальный pocketbook: «экономия / тревога из-за цен». POV-скетч на заправке × драйвер эксперта (психолог → «как не паниковать, глядя на ценник»).", "sensitive": false}, {"emoji": "🌦", "title": "Ураган и потоп в европейской части РФ", "klass": "alpha", "klass_label": "⚡ разгорается", "news_n": 6, "news_note": "Ураган накрыл Подмосковье и Рязанскую обл. · Екатеринбург затопило после ливней · циклон «Бернадетт» · крановщица пережила грозу на 70 м", "ig_niches": ["лайфстайл"], "ig_reels": [{"u": "лайфстайл", "views": 3054, "cap": "#потоп #Ставрополь", "url": "https://www.instagram.com/reel/DaSKCN3OkPC/", "landed": false}], "angle": "Визуальная стихия / бэкстейдж. Для тревел и лайфстайл. ⚠️ есть погибшие — заходить бережно.", "sensitive": false}, {"emoji": "📱", "title": "ЕК против Meta: «вызывающий зависимость» дизайн Instagram", "klass": "news", "klass_label": "📰 в новостях", "news_n": 1, "news_note": "Еврокомиссия пригрозила Meta штрафом, если не изменит дизайн Instagram и Facebook, «вызывающий зависимость»", "ig_niches": [], "ig_reels": [], "angle": "Прямо про нашу кухню: «что будет с рилс/алгоритмом». Залётно у SMM- и бизнес-экспертов.", "sensitive": false}, {"emoji": "💰", "title": "Pocketbook-пакет: ОСАГО, СБП, ЖКХ", "klass": "news", "klass_label": "📰 в новостях", "news_n": 5, "news_note": "Выплаты по ОСАГО выросли · перевод себе >200к по СБП может вызвать подозрение в мошенничестве (МВД) · плату за ЖКХ можно снизить в отпуске · новые ГОСТы на молочку", "ig_niches": [], "ig_reels": [], "angle": "Финграм / лайфхаки — очень широкая аудитория. Формат «3 вещи, которые надо знать с сегодня».", "sensitive": false}, {"emoji": "🌡", "title": "Аномальная жара в Европе и Турции", "klass": "news", "klass_label": "📰 в новостях", "news_n": 2, "news_note": "После 17 июля на турецких курортах >40° · жара в Европе «положила» серверы российских хостингов", "ig_niches": [], "ig_reels": [], "angle": "Тревел: «куда ехать / чего ждать», лайфхаки от жары.", "sensitive": false}, {"emoji": "💍", "title": "Свадьба Тейлор Свифт", "klass": "news", "klass_label": "📰 в новостях", "news_n": 2, "news_note": "Свадьба с Трэвисом Келси в Madison Square Garden · заплатила Нью-Йорку $160к за разрешение", "ig_niches": [], "ig_reels": [], "angle": "Попкультура / lifestyle-реакшн, «свадебные тренды».", "sensitive": false}, {"emoji": "⚽", "title": "ЧМ по футболу", "klass": "news", "klass_label": "📰 в новостях", "news_n": 2, "news_note": "Испания обыграла Бельгию в 1/4 · Холанд забивает в каждом матче · 20 лет удару Зидана в финале ЧМ-2006", "ig_niches": [], "ig_reels": [], "angle": "Спорт / юмор, мемы про матчи.", "sensitive": false}, {"emoji": "🕷", "title": "Клещи и болезнь Лайма", "klass": "news", "klass_label": "📰 сезонное", "news_n": 1, "news_note": "В нескольких регионах выросла доля клещей — переносчиков боррелиоза", "ig_niches": [], "ig_reels": [], "angle": "Здоровье: «как защититься / что делать при укусе». Сезонный эвергрин с новостным поводом.", "sensitive": false}]};
+function renderAgendaView(){
+  const m=AGENDA_DATA.meta;
+  document.getElementById('ag-meta').textContent=`срез ${m.window} · ${m.channels} каналов · ${m.posts} постов`;
+  document.getElementById('ag-filtered').textContent=`≈${m.filtered}`;
+  const body=document.getElementById('agenda-body'); body.innerHTML='';
+  AGENDA_DATA.items.forEach(it=>{
+    const t=el('div','theme');
+    const head=el('div','thead');
+    head.appendChild(el('h3', null, `${it.emoji} ${esc(it.title)} <span class="kchip ${it.klass}">${esc(it.klass_label)}</span>`));
+    head.appendChild(el('span','tot', it.ig_niches.length?`${it.ig_niches.length} ниш в IG`:'нет в IG'));
+    t.appendChild(head);
+    const rows=el('div','agrow');
+    // новости
+    rows.appendChild(el('div','aline',`<span class="alab">📰 Новости</span><span>${esc(it.news_note)} <b>· ${it.news_n} сигн.</b></span>`));
+    // IG
+    let ig;
+    if(it.ig_reels.length){
+      const chips=it.ig_niches.map(n=>`<span class="nichechip">${esc(n)}</span>`).join('');
+      const reels=it.ig_reels.map(r=>{
+        const land=r.landed?' <span class="fchip">залетел</span>':'';
+        return `<a class="vlink" href="${r.url}" target="_blank" rel="noopener"><span class="pl">▶</span> [${esc(r.u)}] «${esc(r.cap)}» <span class="agn">${r.views.toLocaleString('ru')}</span>${land}</a>`;
+      }).join('');
+      ig=`${chips}<div class="areels">${reels}</div>`;
+    } else {
+      ig=`<span class="amuted">по подписям ещё не проявилось — тему говорят в видео, не в тексте (нужен транскрипт)</span>`;
+    }
+    rows.appendChild(el('div','aline',`<span class="alab">📸 Instagram</span><span>${ig}</span>`));
+    // угол
+    rows.appendChild(el('div','aline',`<span class="alab">💡 Угол</span><span>${esc(it.angle)}</span>`));
+    t.appendChild(rows);
+    body.appendChild(t);
+  });
 }
-document.getElementById('tab-themes').onclick=()=>setView(false);
-document.getElementById('tab-formats').onclick=()=>setView(true);
-if(location.hash==='#formats')setView(true);
+function setView(name){
+  const views={themes:'view-themes',formats:'view-formats',agenda:'view-agenda'};
+  const tabs={themes:'tab-themes',formats:'tab-formats',agenda:'tab-agenda'};
+  for(const k in views) document.getElementById(views[k]).hidden=(k!==name);
+  for(const k in tabs){const b=document.getElementById(tabs[k]);b.classList.toggle('on',k===name);b.setAttribute('aria-selected',String(k===name));}
+  const only=name==='themes';
+  document.getElementById('fresh-toggle').style.display=only?'':'none';
+  document.getElementById('stats').style.display=only?'':'none';
+  document.getElementById('modenote').style.display=only?'':'none';
+  if(name==='formats')renderFormatsView();
+  if(name==='agenda')renderAgendaView();
+}
+document.getElementById('tab-themes').onclick=()=>setView('themes');
+document.getElementById('tab-formats').onclick=()=>setView('formats');
+document.getElementById('tab-agenda').onclick=()=>setView('agenda');
+if(location.hash==='#formats')setView('formats');
+if(location.hash==='#agenda')setView('agenda');
 </script>
